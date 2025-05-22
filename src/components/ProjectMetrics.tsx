@@ -5,7 +5,7 @@ import { getProjectMetrics } from '../utils/projectCalculations'
 interface ProjectMetricsProps {
   projectData: ProjectData
 }
-
+//comment
 export const ProjectMetrics = ({ projectData }: ProjectMetricsProps) => {
   const metrics = getProjectMetrics(projectData)
 
