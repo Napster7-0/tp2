@@ -348,7 +348,7 @@ const renderPertChart = () => {
     levels[task.id] = calculateLevel(task.id)
   })
 
-  const maxLevel = Math.max(...Object.values(levels))
+  const maxLevel = Math.max(...Object.values(levels).map(l => Number(l)))
   const levelWidth = width / (maxLevel + 2)
   
   // Grouper les tâches par niveau
