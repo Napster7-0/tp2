@@ -63,7 +63,7 @@ export const PertChart = ({ projectData }: PertChartProps) => {
       if (!eventsByLevel[level]) eventsByLevel[level] = []
       eventsByLevel[level].push(`END_${task.id}`)
     })
-    console.log('Events by level:', eventsByLevel)
+    
     // Positionner les événements
     Object.keys(eventsByLevel).forEach(levelStr => {
       const level = parseInt(levelStr)

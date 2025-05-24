@@ -3,12 +3,13 @@ import { useState } from 'react'
 import { ProjectData } from '../types'
 import { GanttChart } from './GanttChart'
 import { PertChart } from './PertChart'
+import { MpmChart } from './MpmChart'
 
 interface ChartViewerProps {
   projectData: ProjectData
 }
 
-type ChartType = 'gantt' | 'pert'
+type ChartType = 'gantt' | 'pert' | 'mpm'
 
 export const ChartViewer = ({ projectData }: ChartViewerProps) => {
   const [activeTab, setActiveTab] = useState<ChartType>('gantt')
@@ -37,12 +38,23 @@ export const ChartViewer = ({ projectData }: ChartViewerProps) => {
           >
             Diagramme PERT
           </button>
+          <button
+            onClick={() => setActiveTab('mpm')}
+            className={`px-4 py-2 font-medium rounded-lg transition-colors ${
+              activeTab === 'mpm' 
+                ? 'bg-blue-600 text-white' 
+                : 'text-slate-600 hover:text-slate-800'
+            }`}
+          >
+            Diagramme MPM
+          </button>
         </nav>
       </div>
 
       <div className="p-6">
         {activeTab === 'gantt' && <GanttChart projectData={projectData} />}
         {activeTab === 'pert' && <PertChart projectData={projectData} />}
+        {activeTab === 'mpm' && <MpmChart projectData={projectData} />}
       </div>
     </section>
   )
