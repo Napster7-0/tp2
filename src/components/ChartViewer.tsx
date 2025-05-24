@@ -1,15 +1,16 @@
 // components/ChartViewer.tsx
 import { useState } from 'react'
-import { ProjectData } from '../types'
+import { ChartType, ProjectData } from '../types'
 import { GanttChart } from './GanttChart'
 import { PertChart } from './PertChart'
 import { MpmChart } from './MpmChart'
+import { useProjectManager } from '@/hooks/useProjectManager'
 
 interface ChartViewerProps {
   projectData: ProjectData
 }
 
-type ChartType = 'gantt' | 'pert' | 'mpm'
+
 
 export const ChartViewer = ({ projectData }: ChartViewerProps) => {
   const [activeTab, setActiveTab] = useState<ChartType>('gantt')

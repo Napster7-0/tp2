@@ -1,19 +1,23 @@
 // hooks/useProjectManager.ts
 import { useState } from 'react'
-import { Task, ProjectData } from '../types'
+import { Task, ProjectData, ProjectMetrics } from '../types'
 import { generateTaskId, validateTasks, calculateCPM } from '../utils/projectCalculations'
+import { ChartType } from '../types'
 
 export const useProjectManager = () => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [projectData, setProjectData] = useState<ProjectData | null>(null)
+  const [ProjectMetrics, setProjectMetrics] = useState<ProjectMetrics | null>(null)
   const [taskCounter, setTaskCounter] = useState(0)
-
+  const [projectName, setProjectName] = useState('Nouveau Projet')
+  const [activeTab, setActiveTab] = useState<ChartType>('input')
   const addTask = () => {
     const newTask: Task = {
       id: generateTaskId(taskCounter),
       name: '',
       duration: 1,
-      predecessors: []
+      predecessors: [],
+      description: ''
     }
     setTasks([...tasks, newTask])
     setTaskCounter(prev => prev + 1)
@@ -54,10 +58,16 @@ export const useProjectManager = () => {
 
   return {
     tasks,
+    activeTab,
+    projectName,
     projectData,
+    ProjectMetrics,
     addTask,
     updateTask,
     removeTask,
-    calculateProject
+    setActiveTab,
+    setProjectName,
+    calculateProject,
+    setProjectMetrics,
   }
 }

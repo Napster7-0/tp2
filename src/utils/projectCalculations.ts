@@ -33,7 +33,9 @@ export const calculateCPM = (tasks: Task[]): ProjectData => {
       latestStart: 0,
       latestFinish: 0,
       slack: 0,
-      isCritical: false
+      isCritical: false,
+      totalSlack: 0,
+      freeSlack: 0
     }
   })
 
@@ -140,6 +142,8 @@ export const getProjectMetrics = (projectData: ProjectData) => {
   return {
     totalDuration: Math.max(...tasks.map(t => t.earliestFinish || 0)),
     criticalTasksCount: tasks.filter(t => t.isCritical).length,
-    totalTasks: tasks.length
+    totalTasks: tasks.length,
+    criticalPath : projectData ? 
+    Object.values(projectData).filter(t => t.isCritical).map(t => t.id).join(' → ') : ''
   }
 }
