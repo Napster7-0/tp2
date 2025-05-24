@@ -1,5 +1,4 @@
-import ProjectManager from "@/components/home";
-import Image from "next/image";
+import ProjectManager from "@/components/ProjectManager";
 
 export default function Home() {
   return (

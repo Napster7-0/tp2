@@ -1,23 +1,8 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import * as d3 from 'd3'
+import {Task, ProjectData} from '../types'
 
-interface Task {
-  id: string
-  name: string
-  duration: number
-  predecessors: string[]
-  earliestStart?: number
-  earliestFinish?: number
-  latestStart?: number
-  latestFinish?: number
-  slack?: number
-  isCritical?: boolean
-}
-
-interface ProjectData {
-  [key: string]: Task
-}
 
 export default function ProjectManager() {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -320,7 +305,7 @@ const renderPertChart = () => {
   const width = 1200
   const height = 700
   const nodeWidth = 100
-  const nodeHeight = 60
+  const nodeHeight = 80
 
   d3.select(pertRef.current).selectAll('*').remove()
 

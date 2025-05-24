@@ -91,13 +91,123 @@ Tâche D : Déploiement (2 jours) - Prédécesseur: C
 
 ## 🏗️ Architecture du Code
 
-### Structure des Composants
+# Structure du Projet - Gestionnaire de Projet
+
+## 📁 Organisation des fichiers
+
 ```
 src/
 ├── components/
-│   └── home.tsx    # Composant principal
-└── page.tsx            # Page d'accueil
+│   ├── TaskForm.tsx          # Formulaire de saisie des tâches
+│   ├── ProjectMetrics.tsx    # Affichage des métriques du projet
+│   ├── ChartViewer.tsx       # Conteneur pour les graphiques
+│   ├── GanttChart.tsx        # Diagramme de Gantt
+│   └── PertChart.tsx         # Diagramme PERT
+|   └── ProjectManager.tsx        # Composant principal
+├── hooks/
+│   └── useProjectManager.ts  # Hook personnalisé pour la logique métier
+├── utils/
+│   └── projectCalculations.ts # Calculs CPM et utilitaires
+├── types/
+│   └── index.ts              # Définitions TypeScript
+
 ```
+
+## 🔧 Responsabilités de chaque fichier
+
+### Types (`types/index.ts`)
+- Définit toutes les interfaces TypeScript
+- `Task`: Structure d'une tâche de base
+- `ProjectTask`: Tâche avec calculs CPM
+- `ProjectData`: Collection de tâches calculées
+- `ProjectMetrics`: Métriques du projet
+
+### Utilitaires (`utils/projectCalculations.ts`)
+- `generateTaskId()`: Génération d'identifiants de tâches
+- `validateTasks()`: Validation des données d'entrée
+- `calculateCPM()`: Algorithme du chemin critique
+- `getProjectMetrics()`: Calcul des métriques du projet
+
+### Hook personnalisé (`hooks/useProjectManager.ts`)
+- Gestion de l'état des tâches
+- Logique métier centralisée
+- Fonctions CRUD pour les tâches
+- Calcul du projet
+
+### Composants
+
+#### `TaskForm.tsx`
+- Interface de saisie des tâches
+- Gestion des prédécesseurs
+- Boutons d'ajout/suppression
+
+#### `ProjectMetrics.tsx`
+- Affichage des résultats CPM
+- Durée totale, tâches critiques, etc.
+
+#### `ChartViewer.tsx`
+- Navigation entre les graphiques
+- Conteneur pour Gantt et PERT
+
+#### `GanttChart.tsx`
+- Rendu du diagramme de Gantt avec D3.js
+- Visualisation temporelle des tâches
+
+#### `PertChart.tsx`
+- Rendu du diagramme PERT avec D3.js
+- Visualisation des dépendances
+
+#### `ProjectManager.tsx`
+- Composant principal orchestrateur
+- Layout et structure de la page
+
+## 🚀 Avantages de cette structure
+
+### Séparation des responsabilités
+- **Types**: Définitions centralisées
+- **Utils**: Logique pure sans UI
+- **Hooks**: État et logique métier
+- **Components**: Interface utilisateur pure
+
+### Facilité de collaboration
+- Chaque développeur peut travailler sur un composant spécifique
+- Pas de conflits dans les imports
+- Tests unitaires facilités
+
+### Extensibilité
+- Nouveaux diagrammes: ajouter dans `/components`
+- Nouveaux calculs: étendre `/utils`
+- Nouveaux états: modifier le hook
+
+### Maintenabilité
+- Code modulaire et réutilisable
+- Debugging facilité
+- Refactoring sécurisé
+
+## 📝 Guide de développement
+
+### Ajouter un nouveau diagramme
+1. Créer `components/NouveauDiagramme.tsx`
+2. Ajouter le type dans `ChartViewer.tsx`
+3. Intégrer dans le système d'onglets
+
+### Ajouter de nouvelles métriques
+1. Étendre `ProjectMetrics` dans `types/index.ts`
+2. Modifier `getProjectMetrics()` dans `utils/`
+3. Mettre à jour `ProjectMetrics.tsx`
+
+### Modifier les calculs
+1. Toute la logique est dans `utils/projectCalculations.ts`
+2. Les types sont dans `types/index.ts`
+3. Pas besoin de toucher aux composants UI
+
+## 🔄 Flux de données
+
+```
+User Input → TaskForm → useProjectManager → calculateCPM → ProjectData → Charts/Metrics
+```
+
+Cette architecture garantit un flux de données unidirectionnel et prévisible.
 
 ### Algorithmes Implémentés
 
