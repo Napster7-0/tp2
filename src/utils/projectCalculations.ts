@@ -69,17 +69,23 @@ export const calculateCPM = (tasks: Task[]): ProjectData => {
     })
   }
 
-  // Backward pass
+  // Backward pass - Version corrigée
   const projectEnd = Math.max(...Object.values(schedule).map(t => t.earliestFinish || 0))
   
-  // Initialiser les tâches finales
-  Object.values(schedule).forEach(task => {
-    if (task.earliestFinish === projectEnd) {
-      task.latestFinish = projectEnd
-      task.latestStart = projectEnd - task.duration
-    }
+  // Étape 1: Identifier toutes les tâches finales et les initialiser
+  const finalTasks = tasks.filter(task => {
+    // Une tâche est finale si elle n'est prédécesseur d'aucune autre tâche
+    return !tasks.some(otherTask => otherTask.predecessors.includes(task.id))
   })
-
+  
+  // Initialiser toutes les tâches finales avec projectEnd
+  finalTasks.forEach(task => {
+    const current = schedule[task.id]
+    current.latestFinish = projectEnd
+    current.latestStart = projectEnd - task.duration
+  })
+  
+  // Étape 2: Propager les dates au plus tard
   changed = true
   iterations = 0
   
@@ -87,18 +93,33 @@ export const calculateCPM = (tasks: Task[]): ProjectData => {
     changed = false
     iterations++
     
+    // Parcourir les tâches dans l'ordre inverse topologique
     tasks.slice().reverse().forEach(task => {
       const current = schedule[task.id]
+      
+      // Trouver tous les successeurs de cette tâche
       const successors = tasks.filter(t => t.predecessors.includes(task.id))
       
       if (successors.length > 0) {
-        const minLS = Math.min(...successors.map(s => schedule[s.id].latestStart || 0))
-        const newLF = minLS
-        const newLS = newLF - task.duration
+        // Si la tâche a des successeurs, son LF = min(LS des successeurs)
+        const minSuccessorLS = Math.min(...successors.map(s => schedule[s.id].latestStart || Infinity))
         
-        if (current.latestFinish !== newLF || current.latestStart !== newLS) {
-          current.latestFinish = newLF
-          current.latestStart = newLS
+        if (minSuccessorLS !== Infinity) {
+          const newLF = minSuccessorLS
+          const newLS = newLF - task.duration
+          
+          // Vérifier si les dates ont changé et qu'elles sont valides
+          if ((current.latestFinish !== newLF || current.latestStart !== newLS) && newLS >= 0) {
+            current.latestFinish = newLF
+            current.latestStart = newLS
+            changed = true
+          }
+        }
+      } else {
+        // Si la tâche n'a pas de successeurs, elle devrait déjà être initialisée comme tâche finale
+        if (current.latestFinish === 0 && current.latestStart === 0) {
+          current.latestFinish = projectEnd
+          current.latestStart = projectEnd - task.duration
           changed = true
         }
       }
@@ -108,7 +129,7 @@ export const calculateCPM = (tasks: Task[]): ProjectData => {
   // Calcul des marges et chemin critique
   Object.values(schedule).forEach(task => {
     task.slack = (task.latestStart || 0) - (task.earliestStart || 0)
-    task.isCritical = task.slack === 0
+    task.isCritical = Math.abs(task.slack) < 0.001 // Utiliser une tolérance pour les erreurs de virgule flottante
   })
 
   return schedule
