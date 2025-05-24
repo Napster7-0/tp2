@@ -116,7 +116,7 @@ export const TaskForm = ({
                     className="flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
                   >
                     <Calculator size={20} />
-                    <span>Calculer le Projet</span>
+                    <span>Génerer les diagrammes</span>
                   </button>
                 </div>
               </div>
