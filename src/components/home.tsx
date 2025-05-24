@@ -77,18 +77,18 @@ export default function ModernProjectManager() {
   }
 
   const calculateProject = () => {
-    if (tasks.length === 0) {
-      alert('Veuillez ajouter au moins une tâche.')
-      return
-    }
-    if (tasks.some(t => !t.name.trim())) {
-      alert('Veuillez nommer toutes les tâches.')
-      return
-    }
-    const calculatedData = calculateCPM()
-    setProjectData(calculatedData)
-    setActiveView('table')
+  if (tasks.length === 0) {
+    alert('Veuillez ajouter au moins une tâche.')
+    return
   }
+  if (tasks.some(t => !t.name.trim())) {
+    alert('Veuillez nommer toutes les tâches.')
+    return
+  }
+  const calculatedData = calculateCPM()
+  setProjectData(calculatedData)
+  setActiveView('table') 
+}
 
   const calculateCPM = (): ProjectData => {
     const schedule: ProjectData = {}
@@ -755,20 +755,6 @@ export default function ModernProjectManager() {
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 backdrop-blur-lg rounded-2xl p-6 border border-purple-400/30">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-purple-300 text-sm font-medium">Marge Moyenne</p>
-                    <p className="text-3xl font-bold text-white">
-                      {(Object.values(projectData).reduce((sum, t) => sum + (t.totalSlack || 0), 0) / Object.values(projectData).length).toFixed(1)}
-                    </p>
-                    <p className="text-purple-300 text-sm">jours</p>
-                  </div>
-                  <div className="text-purple-400">
-                    <Calculator size={32} />
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* Chemin critique */}
