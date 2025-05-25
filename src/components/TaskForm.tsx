@@ -180,7 +180,35 @@ export const TaskForm = ({
                   </button>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
+
+          <div className="flex flex-wrap gap-4">
+            <button
+              onClick={onTaskAdd}
+              className="flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <Plus size={20} />
+              <span>Ajouter une Tâche</span>
+            </button>
+            
+            <button
+              onClick={handleCalculateProject}
+              disabled={isGenerating || tasks.length === 0}
+              className={`flex items-center space-x-2 px-8 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl ${
+                isGenerating || tasks.length === 0
+                  ? 'bg-gray-500/50 text-gray-300 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white'
+              }`}
+            >
+              <Calculator size={20} className={isGenerating ? 'animate-spin' : ''} />
+              <span>
+                {isGenerating ? 'Génération en cours...' : 'Générer les diagrammes'}
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
