@@ -365,7 +365,7 @@ export default function ModernProjectManager() {
       levels[task.id] = calculateLevel(task.id)
     })
 
-    const maxLevel = Math.max(...Object.values(levels))
+    const maxLevel = Math.max(...Object.values(levels).map(Number))
     const levelWidth = width / (maxLevel + 2)
     
     const tasksByLevel = {}
@@ -949,7 +949,7 @@ export default function ModernProjectManager() {
                     </div>
                     <div className="flex items-center space-x-3">
                       <div className="w-6 h-6 bg-blue-500 rounded-full"></div>
-                      <span className="text-white/80">Nœud normal (marge > 0)</span>
+                      <span className="text-white/80">Nœud normal (marge {'>'} 0)</span>
                     </div>
                   </div>
                   <div className="space-y-3">
