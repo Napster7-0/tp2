@@ -205,41 +205,9 @@ export default function LandingPage({ onStartApp }: LandingPageProps) {
         </div>
       </section>
 
-      {/* Section d'information compacte */}
-      <section className="py-16 bg-white/5 backdrop-blur">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Planification moderne et intuitive
-          </h2>
-          <p className="text-lg text-white/70 max-w-3xl mx-auto mb-8">
-            Interface moderne, calculs automatiques et visualisations interactives pour une gestion de projet optimale
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-2xl hover:shadow-blue-500/25 hover:scale-105">
-              Commencer maintenant
-            </button>
-            <button className="bg-white/10 backdrop-blur hover:bg-white/20 text-white px-8 py-4 rounded-xl font-semibold text-lg border border-white/20 transition-all duration-300">
-              Voir la documentation
-            </button>
-          </div>
-        </div>
-      </section>
+     
 
-      {/* Footer */}
-      <footer className="py-12 border-t border-white/10">
-        <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-white/60 mb-4 md:mb-0">
-              © 2024 Gestionnaire de Projet Avancé. Tous droits réservés.
-            </div>
-            <div className="flex items-center space-x-6">
-              <Github className="w-6 h-6 text-white/60 hover:text-white cursor-pointer transition-colors" />
-              <Linkedin className="w-6 h-6 text-white/60 hover:text-white cursor-pointer transition-colors" />
-              <Mail className="w-6 h-6 text-white/60 hover:text-white cursor-pointer transition-colors" />
-            </div>
-          </div>
-        </div>
-      </footer>
+    
 
       <style jsx>{`
         @keyframes scroll {
