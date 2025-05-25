@@ -8,7 +8,7 @@ import { TableStat } from './Table'
 import Header from './Header'
 
 
-export default function ProjectManager() {
+export default function   ProjectManager() {
   const {
     tasks,
     activeTab,
