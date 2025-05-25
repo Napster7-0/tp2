@@ -25,7 +25,7 @@ export const TableStat = ({
 
     <div className="space-y-8">
         {/* Résumé du projet */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 backdrop-blur-lg rounded-2xl p-6 border border-blue-400/30">
             <div className="flex items-center justify-between">
                 <div>
@@ -71,20 +71,7 @@ export const TableStat = ({
             </div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 backdrop-blur-lg rounded-2xl p-6 border border-purple-400/30">
-            <div className="flex items-center justify-between">
-                <div>
-                <p className="text-purple-300 text-sm font-medium">Marge Moyenne</p>
-                <p className="text-3xl font-bold text-white">
-                    {tasks.map(task => task.totalSlack).reduce((a, b) => a + b, 0) / tasks.length || 0}
-                </p>
-                <p className="text-purple-300 text-sm">jours</p>
-                </div>
-                <div className="text-purple-400">
-                <Calculator size={32} />
-                </div>
-            </div>
-            </div>
+            
         </div>
 
         {/* Chemin critique */}
