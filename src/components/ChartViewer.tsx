@@ -16,7 +16,7 @@ export const ChartViewer = ({ projectData }: ChartViewerProps) => {
   const [activeTab, setActiveTab] = useState<ChartType>('gantt')
 
   return (
-    <section className="bg-white rounded-xl shadow-lg border border-slate-200 mb-8">
+    <section className="bg-white shadow-lg border border-slate-200 ">
       <div className="p-6 border-b border-slate-200">
         <nav className="flex gap-6">
           <button
