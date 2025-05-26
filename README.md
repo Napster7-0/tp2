@@ -66,7 +66,7 @@ Ouvrir [http://localhost:3000](http://localhost:3000) dans votre navigateur
 - Cliquez sur "Ajouter une Tâche" pour créer une nouvelle activité
 - Remplissez les champs :
   - **Nom** : Description de la tâche
-  - **Durée** : Nombre de jours nécessaires
+  - **Durée** : Nombre de unités de temps nécessaires
   - **Prédécesseurs** : Tâches qui doivent être terminées avant (ex: A, B, C)
 
 ### 2. Calcul du Projet
@@ -83,10 +83,10 @@ Ouvrir [http://localhost:3000](http://localhost:3000) dans votre navigateur
 
 ### Exemple de Projet
 ```
-Tâche A : Conception (5 jours) - Pas de prédécesseur
-Tâche B : Développement (8 jours) - Prédécesseur: A
-Tâche C : Tests (3 jours) - Prédécesseur: B
-Tâche D : Déploiement (2 jours) - Prédécesseur: C
+Tâche A : Conception (5 unités de temps) - Pas de prédécesseur
+Tâche B : Développement (8 unités de temps) - Prédécesseur: A
+Tâche C : Tests (3 unités de temps) - Prédécesseur: B
+Tâche D : Déploiement (2 unités de temps) - Prédécesseur: C
 ```
 
 ## 🏗️ Architecture du Code

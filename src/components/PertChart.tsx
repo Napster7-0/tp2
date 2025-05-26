@@ -16,13 +16,45 @@ export const PertChart = ({ projectData }: PertChartProps) => {
     }
   }, [projectData])
 
+  const calculateSlacks = (tasks: any[]) => {
+    const taskMap = Object.fromEntries(tasks.map(task => [task.id, task]))
+    
+    tasks.forEach(task => {
+      // Marge totale = Date au plus tard de fin - Date au plus tôt de fin
+      const totalSlack = (task.latestFinish || task.earliestFinish || (task.earliestStart || 0) + task.duration) - 
+                        (task.earliestFinish || (task.earliestStart || 0) + task.duration)
+      
+      // Marge libre = Min(Date au plus tôt de début des successeurs) - Date au plus tôt de fin de la tâche
+      const successors = tasks.filter(t => t.predecessors.includes(task.id))
+      let freeSlack = 0
+      
+      if (successors.length > 0) {
+        const minSuccessorStart = Math.min(...successors.map(s => s.earliestStart || 0))
+        const taskEarliestFinish = task.earliestFinish || (task.earliestStart || 0) + task.duration
+        freeSlack = minSuccessorStart - taskEarliestFinish
+      } else {
+        // Si pas de successeurs, marge libre = marge totale
+        freeSlack = totalSlack
+      }
+      
+      task.totalSlack = Math.max(0, totalSlack)
+      task.freeSlack = Math.max(0, freeSlack)
+    })
+    
+    return tasks
+  }
+
   const renderChart = () => {
     if (!projectData || !chartRef.current) return
 
-    const tasks = Object.values(projectData)
-    const width = 1400
-    const height = 800
-    const nodeRadius = 40
+    let tasks = Object.values(projectData)
+    
+    // Calculer les marges
+    tasks = calculateSlacks(tasks)
+    
+    const width = 1600
+    const height = 900
+    const nodeRadius = 45
 
     d3.select(chartRef.current).selectAll('*').remove()
 
@@ -34,7 +66,7 @@ export const PertChart = ({ projectData }: PertChartProps) => {
     // Créer la structure des événements (nœuds)
     const events = new Map<string, { id: string; x: number; y: number; earliestTime: number; latestTime: number }>()
     
-    // Nœud de début (toujours 0,0)
+    // Nœud de début (tous à 0,0)
     events.set('START', { id: 'START', x: 100, y: height / 2, earliestTime: 0, latestTime: 0 })
     
     // Calculer les niveaux des tâches pour positionner les événements
@@ -54,7 +86,7 @@ export const PertChart = ({ projectData }: PertChartProps) => {
     })
 
     const maxLevel = Math.max(...Object.values(levels))
-    const levelWidth = (width - 200) / (maxLevel + 1)
+    const levelWidth = (width - 250) / (maxLevel + 1)
 
     // Créer les événements pour chaque fin de tâche
     const eventsByLevel: Record<number, string[]> = {}
@@ -73,7 +105,6 @@ export const PertChart = ({ projectData }: PertChartProps) => {
       levelEvents.forEach((eventId, index) => {
         const taskId = eventId.replace('END_', '')
         const task = projectData[taskId]
-        console.log(task)
         events.set(eventId, {
           id: eventId,
           x: 100 + levelWidth * level,
@@ -81,7 +112,6 @@ export const PertChart = ({ projectData }: PertChartProps) => {
           earliestTime: task.earliestFinish || (task.earliestStart || 0) + task.duration,
           latestTime: task.latestFinish || task.earliestFinish || (task.earliestStart || 0) + task.duration
         })
-        console.log(events)
       })
     })
 
@@ -95,7 +125,7 @@ export const PertChart = ({ projectData }: PertChartProps) => {
     
     events.set('END', { 
       id: 'END', 
-      x: width - 100, 
+      x: width - 150, 
       y: height / 2, 
       earliestTime: projectEndTime, 
       latestTime: projectEndTime 
@@ -143,7 +173,7 @@ export const PertChart = ({ projectData }: PertChartProps) => {
       .attr('d', 'M0,0 L0,6 L9,3 z')
       .attr('fill', '#666')
 
-        // Dessiner les tâches (arêtes)
+    // Dessiner les tâches (arêtes)
     tasks.forEach(task => {
       let startEvent = 'START'
       
@@ -228,12 +258,13 @@ export const PertChart = ({ projectData }: PertChartProps) => {
         const midY = (startY + endY) / 2
         
         // Décaler le texte perpendiculairement à la ligne
-        const perpX = -unitY * 15
-        const perpY = unitX * 15
+        const perpX = -unitY * 25
+        const perpY = unitX * 25
         
+        // Informations de la tâche
         svg.append('text')
           .attr('x', midX + perpX)
-          .attr('y', midY + perpY)
+          .attr('y', midY + perpY - 10)
           .attr('text-anchor', 'middle')
           .attr('fill', isCritical ? '#ef4444' : '#000')
           .style('font-size', '12px')
@@ -242,11 +273,21 @@ export const PertChart = ({ projectData }: PertChartProps) => {
         
         svg.append('text')
           .attr('x', midX + perpX)
-          .attr('y', midY + perpY + 15)
+          .attr('y', midY + perpY + 5)
           .attr('text-anchor', 'middle')
           .attr('fill', '#666')
           .style('font-size', '10px')
-          .text(task.name.length > 12 ? task.name.substring(0, 12) + '...' : task.name)
+          .text(task.name.length > 15 ? task.name.substring(0, 15) + '...' : task.name)
+        
+        // Afficher les marges
+        svg.append('text')
+          .attr('x', midX + perpX)
+          .attr('y', midY + perpY + 20)
+          .attr('text-anchor', 'middle')
+          .attr('fill', '#0066cc')
+          .style('font-size', '9px')
+          .style('font-weight', 'bold')
+          .text(`MT: ${task.totalSlack || 0} | ML: ${task.freeSlack || 0}`)
       }
     })
 
@@ -405,7 +446,7 @@ export const PertChart = ({ projectData }: PertChartProps) => {
       }
     })
 
-    // Légende
+    // Légende étendue
     const legend = svg.append('g')
       .attr('transform', 'translate(20, 20)')
 
@@ -468,6 +509,53 @@ export const PertChart = ({ projectData }: PertChartProps) => {
       .attr('fill', '#666')
       .style('font-size', '11px')
       .text('Contrainte temporelle')
+
+    // Légende pour les marges
+    legend.append('text')
+      .attr('x', 0)
+      .attr('y', 95)
+      .attr('fill', '#0066cc')
+      .style('font-size', '11px')
+      .style('font-weight', 'bold')
+      .text('MT: Marge Totale | ML: Marge Libre')
+
+    // Tableau récapitulatif des marges
+    const tableY = 130
+    legend.append('text')
+      .attr('x', 0)
+      .attr('y', tableY)
+      .attr('fill', '#333')
+      .style('font-size', '12px')
+      .style('font-weight', 'bold')
+      .text('Récapitulatif des marges :')
+
+    tasks.forEach((task, index) => {
+      const yPos = tableY + 20 + (index * 18)
+      
+      legend.append('text')
+        .attr('x', 0)
+        .attr('y', yPos)
+        .attr('fill', task.isCritical ? '#ef4444' : '#333')
+        .style('font-size', '10px')
+        .style('font-weight', task.isCritical ? 'bold' : 'normal')
+        .text(`${task.id}: MT=${task.totalSlack || 0}, ML=${task.freeSlack || 0}`)
+    })
+
+    // Explication des calculs
+    const explanationY = tableY + 20 + (tasks.length * 18) + 30
+    legend.append('text')
+      .attr('x', 0)
+      .attr('y', explanationY)
+      .attr('fill', '#666')
+      .style('font-size', '9px')
+      .text('Marge Totale = Yⱼ - Xᵢ - dᵢⱼ')
+
+    legend.append('text')
+      .attr('x', 0)
+      .attr('y', explanationY + 15)
+      .attr('fill', '#666')
+      .style('font-size', '9px')
+      .text('Marge Libre = Xⱼ - Xᵢ - dᵢⱼ')
   }
 
   return <div ref={chartRef} className="w-full overflow-x-auto" />

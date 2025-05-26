@@ -648,7 +648,7 @@ export default function ModernProjectManager() {
                         </div>
                         
                         <div className="lg:col-span-2 space-y-2">
-                          <label className="text-white/80 text-sm font-medium">Durée (jours)</label>
+                          <label className="text-white/80 text-sm font-medium">Durée (unités de temps)</label>
                           <input
                             type="number"
                             value={task.duration}
@@ -717,7 +717,7 @@ export default function ModernProjectManager() {
                     <p className="text-3xl font-bold text-white">
                       {Math.max(...Object.values(projectData).map(t => t.earliestFinish || 0))}
                     </p>
-                    <p className="text-blue-300 text-sm">jours</p>
+                    <p className="text-blue-300 text-sm">unités de temps</p>
                   </div>
                   <div className="text-blue-400">
                     <BarChart3 size={32} />

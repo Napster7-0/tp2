@@ -41,6 +41,34 @@ export const TaskForm = ({
     }
   }
 
+  // Fonction pour gérer les durées décimales
+  const handleDurationChange = (index: number, value: string) => {
+    if (value === '') {
+      onTaskUpdate(index, 'duration', '')
+      return
+    }
+
+    // Remplacer les virgules par des points pour la conversion
+    const normalizedValue = value.replace(',', '.')
+    
+    // Vérifier si c'est un nombre valide
+    const numValue = parseFloat(normalizedValue)
+    
+    if (!isNaN(numValue) && numValue > 0) {
+      onTaskUpdate(index, 'duration', numValue)
+    }
+  }
+
+  // Fonction pour afficher la durée (avec virgule si décimal)
+  const formatDurationValue = (duration: number | string) => {
+    if (duration === '' || duration === null || duration === undefined) {
+      return ''
+    }
+    
+    // Convertir en string et remplacer le point par une virgule pour l'affichage
+    return duration.toString().replace('.', ',')
+  }
+
   return (
    <div className="space-y-8">
 
@@ -90,16 +118,15 @@ export const TaskForm = ({
                         </div>
 
                         <div className="lg:col-span-2 space-y-2">
-                          <label className="text-white/80 text-sm font-medium">Durée (jours)</label>
+                          <label className="text-white/80 text-sm font-medium">Durée (unités de temps)</label>
                           <input
-                            type="number"
-                            value={task.duration || ''}
-                            onChange={(e) => {
-                              const value = e.target.value;
-                              onTaskUpdate(index, 'duration', value === '' ? '' : parseInt(value) || 1);
-                            }}
+                            type="text"
+                            value={formatDurationValue(task.duration)}
+                            onChange={(e) => handleDurationChange(index, e.target.value)}
                             className="w-full bg-white/10 backdrop-blur text-white px-4 py-3 rounded-lg border border-white/20 focus:border-blue-400 focus:outline-none transition-colors h-[52px]"
-                            min="1"
+                            placeholder="Ex: 2,5"
+                            pattern="[0-9]+([,\.][0-9]+)?"
+                            title="Entrez une durée en unités de temps (ex: 2,5 ou 3)"
                           />
                         </div>
 

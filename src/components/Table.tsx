@@ -33,7 +33,7 @@ export const TableStat = ({
                 <p className="text-3xl font-bold text-white">
                     {projectMetrics.totalDuration}
                 </p>
-                <p className="text-blue-300 text-sm">jours</p>
+                <p className="text-blue-300 text-sm">unités de temps</p>
                 </div>
                 <div className="text-blue-400">
                 <BarChart3 size={32} />

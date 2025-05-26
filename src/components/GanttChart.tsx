@@ -89,7 +89,7 @@ export const GanttChart = ({ projectData }: GanttChartProps) => {
     // Axe des temps
     const xAxis = d3.axisTop(x)
       .ticks(Math.min(10, maxTime))
-      .tickFormat(d => `Jour ${d}`)
+      .tickFormat(d => `${d}`)
     
     svg.append('g')
       .attr('class', 'x-axis')

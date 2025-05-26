@@ -138,7 +138,9 @@ export const calculateCPM = (tasks: Task[]): ProjectData => {
 }
 
 export const getProjectMetrics = (projectData: ProjectData) => {
+  // calcul des marges libres, et marges totales de chaque tâche
   const tasks = Object.values(projectData)
+  
   return {
     totalDuration: Math.max(...tasks.map(t => t.earliestFinish || 0)),
     criticalTasksCount: tasks.filter(t => t.isCritical).length,
